@@ -1,11 +1,3 @@
-""" CRUD es un acrónimo que representa las operaciones básicas que se pueden realizar en un sistema de gestión de bases de datos o, de manera más general, en cualquier sistema que involucre almacenamiento y recuperación de datos. Las letras CRUD representan:
-
---C (Create): Crear nuevos registros o datos en la base de datos.
---R (Read): Leer o recuperar información existente de la base de datos.
---U (Update): Actualizar o modificar registros o datos existentes en la base de datos.
---D (Delete): Eliminar registros o datos existentes de la base de datos.
-"""
-
 from enum import Enum
 
 class Sexo(Enum):
