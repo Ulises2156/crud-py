@@ -28,9 +28,28 @@ class Persona():
         El nombre es: {self.nombre} y tiene {self.edad}
         Es de sexo: {self.sexo.value} y sus comidas favoritas son: {self.comidas_favs.__str__()}"""
 
+def cargar_datos():
+    try:
+        with open("datos_personas.csv", "r") as archivo:
+            lineas = archivo.readlines()
+            for linea in lineas:
+                campos = linea.strip().split(',')
+                id, nombre, edad, sexo, comidas_favs = int(campos[0]), campos[1], int(campos[2]), Sexo(sexo), campos[4].split(',')
+                personas.append(Persona(id, nombre, edad, sexo, comidas_favs))
+    except FileNotFoundError:
+        print("No se encontró el archivo de datos. Se iniciará con una lista vacía.")
+
+def guardar_datos():
+    with open("datos_personas.csv", "w") as archivo:
+        for persona in personas:
+            archivo.write(f"{persona.id},{persona.nombre},{persona.edad},{persona.sexo.value},{','.join(persona.comidas_favs)}\n")
+
+
 # Ahora inicializamos una lista de personas 
 
 personas= []
+
+cargar_datos=()
 
 def mostrar_menu():
     print("\n ---Menú ---")
@@ -38,6 +57,7 @@ def mostrar_menu():
     print("2. Mostrar lista de las personas")
     print("3. Actualizar las persona de la lista")
     print("4. Eliminar persona de la lista")
+    print("5. Guardar los datos y salir")
     print("0. Presione el número 0 para salir del programa")
 
 def crear_persona():
@@ -45,27 +65,35 @@ def crear_persona():
 
     id = len(personas) + 1
     nombre = input("Ingrese el nombre: ")
+    while not nombre.strip():
+        print("¡NOMBRE OBLIGATORIO! Por favor, ingrese su nombre.")
+        nombre = input("Ingrese el nombre: ")
 
     while not accepted:
         try:
             edad = int(input("Ingrese la edad: "))
             accepted = True
         except ValueError:
-            print("Debe ingresar un numero entero.")
+            print("Debe ingresar un numero entero de su edad.")
 
     accepted = False
     while not accepted:
         sexo = str(input("Ingrese el sexo (M/F): "))
+        print("Por favor selecione la opciones dada de genero")
         if sexo == 'M' or sexo == 'm':
             sexo = Sexo.M
             accepted = True
         elif sexo == 'F' or sexo == 'f':
             sexo = Sexo.F
             accepted = True
+        
 
-    comidas_favs = input("Ingrese las comidas favoritas (por favor separadas por comas): ").split(',')
+    comidas_favs = input("Ingrese las comidas favoritas (por favor separadas por comas): ")
+    while not comidas_favs or not any(c.isalpha() for c in comidas_favs):
+        print("¡Al menos una comida favorita es obligatorio! Por favor, ingrese las comidas separadas por comas.")
+        comidas_favs = input("Ingrese las comidas favoritas (por favor separadas por comas): ")
 
-    persona_nueva = Persona(id, nombre, edad, sexo, comidas_favs)
+    persona_nueva = Persona(id, nombre, edad, sexo, comidas_favs.split(","))
     personas.append(persona_nueva)
     print(f"\nPersona creada:\n{persona_nueva}")
 
@@ -88,7 +116,7 @@ def actualizar_persona():
         nombre = input("Ingrese el nuevo nombre: ")
         edad = int(input("Ingrese la nueva edad: "))
         sexo = str(input("Ingrese el nuevo sexo (M/F): "))
-        comidas_favs = input("Ingrese las nuevas comidas favoritas (por favor separadas por comas): ").split(',')
+        comidas_favs = str(input("Ingrese las nuevas comidas favoritas (por favor separadas por comas): ").split(','))
 
         persona_encontrada.nombre = nombre
         persona_encontrada.edad = edad
@@ -127,6 +155,8 @@ while True:
         actualizar_persona()
     elif opcion == "4":
         eliminar_persona()
+    elif opcion == "5":
+        guardar_datos()
     elif opcion == "0":
         print("Saliendo del programa. ¡Hasta luego!")
         break
