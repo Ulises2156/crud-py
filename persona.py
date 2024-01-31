@@ -27,22 +27,73 @@ class Persona:
         -----------
         Persona:(id:{self.id}, nombre:{self.nombre}, Edad: {self.edad}, Sexo: {self.sexo.value}, Comidas favoritas: {', '.join(self.comidas_favs)})"""
 
-def interactuar_con_personas():
+def cargar_datos_predefinidos(personas):
+    # aqui vamos a cargar los datos determinados para que el usuario pueda ver la función al instante
+    personas.extend([
+        Persona(1, "Ulises", 21, Sexo.M, ["Pizza", "Hamburguesa", "Pasta"]),
+        Persona(2, "Fatima", 19, Sexo.F, ["Ensalada", "Pizza", "Sushi"]),
+        Persona(3, "Maira", 27, Sexo.F, ["Pizza", "Asado", "Lomito"]),
+        Persona(4, "Silvina", 47, Sexo.F, ["Lomito", "Ravioles", "Helado", "Pizza"])
+    ])
+    print("Datos precargados exitosamente.")
+
+
     persona1 = Persona(1, "Ulises", 21, Sexo.M, ["Pizza", "Hamburguesa", "Pasta"])
     persona2 = Persona(2, "Fatima", 19, Sexo.F, ["Ensalada", "Pizza", "Sushi"])
     persona3 = Persona(3, "Maira", 27, Sexo.F, ["Pizza", "Asado", "Lomito"])
     persona4 = Persona(4, "Silvina", 47, Sexo.F, ["Lomito", "Ravioles", "Helado", "Pizza"])
 
-    for persona in [persona1, persona2, persona3, persona4]:
-        print(persona.saludo())
+    personas = [persona1, persona2, persona3, persona4]
 
-    cenas_en_comun_1_2 = persona1.cenar_juntos(persona2)
-    cenas_en_comun_1_3 = persona1.cenar_juntos(persona3)
-    cenas_en_comun_1_4 = persona1.cenar_juntos(persona4)
+    def interactuar_con_personas(personas):
+        for persona in personas:
+            print(persona.saludo())
 
-    print(f"Cenas en común entre {persona1.nombre} y {persona2.nombre}: {cenas_en_comun_1_2}")
-    print(f"Cenas en común entre {persona1.nombre} y {persona3.nombre}: {cenas_en_comun_1_3}")
-    print(f"Cenas en común entre {persona1.nombre} y {persona4.nombre}: {cenas_en_comun_1_4}")
+    while True:
+        print("\n--- Opciones ---")
+        print("1. Saludar entre personas")
+        print("2. Ver cenas en común")
+        print("3. Volver al menú principal")
+        opcion = input("Ingrese la opción deseada (1-3): ")
+
+        if opcion == "1":
+            saludar_entre_personas(personas)
+        elif opcion == "2":
+            cenas_en_comun_1_2 = persona1.cenar_juntos(persona2)
+            cenas_en_comun_1_3 = persona1.cenar_juntos(persona3)
+            cenas_en_comun_1_4 = persona1.cenar_juntos(persona4)
+
+            print(f"Cenas en común entre {persona1.nombre} y {persona2.nombre}: {cenas_en_comun_1_2}")
+            print(f"Cenas en común entre {persona1.nombre} y {persona3.nombre}: {cenas_en_comun_1_3}")
+            print(f"Cenas en común entre {persona1.nombre} y {persona4.nombre}: {cenas_en_comun_1_4}")
+        elif opcion == "3":
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
+
+def saludar_entre_personas(personas):
+    print("\n--- Personas Disponibles ---")
+    for i, persona in enumerate(personas):
+        if isinstance(persona, Persona):
+            print(f"{i + 1}. {persona.nombre}")
+
+    seleccion1 = int(input("Seleccione el número de la primera persona para saludar: "))
+    seleccion2 = int(input("Seleccione el número de la segunda persona para saludar: "))
+
+    try:
+        persona1 = personas[seleccion1 - 1]
+        persona2 = personas[seleccion2 - 1]
+
+        if isinstance(persona1, Persona) and isinstance(persona2, Persona):
+            print(f"\n{persona1.saludo()} y {persona2.saludo()}")
+        else:
+            print("Selección no válida. Ambas selecciones deben ser personas.")
+    except (IndexError, ValueError):
+        print("Selección no válida. Asegúrese de ingresar números válidos.")
+
+
+
+
 
 def cargar_datos():
     personas = []
@@ -77,6 +128,7 @@ def mostrar_menu():
     print("5. Guardar los datos y salir")
     print("6. Guardar su preset de datos")
     print("7. Saludar con su preset")
+    print("8. CARGAR LOS DATOS PREDETERMINADO DEL SISTEMA")
     print("0. Presione el número 0 para salir del programa")
 
 def crear_persona(personas):
@@ -240,6 +292,8 @@ if __name__ == "__main__":
             guardar_preset(personas)
         elif opcion == "7":
             saludar_con_preset(personas)
+        elif opcion =="8":
+            cargar_datos_predefinidos(personas)
         elif opcion == "0":
             print("Saliendo del programa. ¡Hasta luego!")
             break
